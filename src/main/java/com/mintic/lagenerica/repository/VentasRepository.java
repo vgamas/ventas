@@ -2,9 +2,9 @@ package com.mintic.lagenerica.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.mintic.lagenerica.model.ventas;
+import com.mintic.lagenerica.model.Ventas;
 
-public interface ventasRepository extends MongoRepository<ventas, Long> {
+public interface VentasRepository extends MongoRepository<Ventas, Long> {
 
 //	List<Producto> findByNombre_producto(String nombre);
 }

@@ -1,4 +1,5 @@
-package java.com.mintic.lagenerica.repository;
+package com.mintic.lagenerica.controller;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -18,25 +19,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mintic.lagenerica.model.ventas;
-import com.mintic.lagenerica.repository.ventasRepository;
+import com.mintic.lagenerica.model.Ventas;
+import com.mintic.lagenerica.repository.VentasRepository;
 
-@CrossOrigin(origins = "http://localhost:8181")
+@CrossOrigin(origins = {"http://localhost:8181", "http://localhost:3000"})
 @RestController
 @RequestMapping("/ventas")
-public class ventasController {
+public class VentasController {
 
 	@Autowired
-	private ventasRepository ventasRepository;
+	private VentasRepository ventasRepository;
 	
 	@PostMapping("/guardar")
-	public ResponseEntity<?> crearventa(@RequestBody ventas ventas){
+	public ResponseEntity<?> crearventa(@RequestBody Ventas ventas){
 		return ResponseEntity.status(HttpStatus.CREATED).body(ventasRepository.save(ventas));
 	}
 	
 	@GetMapping("/listar")
-	public List<ventas> listarventas() {
-		List<ventas> listaVentas = StreamSupport.stream(ventasRepository.findAll().spliterator(), false).collect(Collectors.toList());
+	public List<Ventas> listarventas() {
+		List<Ventas> listaVentas = StreamSupport.stream(ventasRepository.findAll().spliterator(), false).collect(Collectors.toList());
 		
 		return listarventas();
 	}
@@ -44,7 +45,7 @@ public class ventasController {
 	@GetMapping("/buscar/{id}")
 	public ResponseEntity<?> bucarventasEntity(@PathVariable(value = "id") Long id) {
 
-		Optional<ventas> oventas = ventasRepository.findById(id) ;
+		Optional<Ventas> oventas = ventasRepository.findById(id) ;
 		
 		if (oventas.isEmpty())
 			return ResponseEntity.notFound().build();
@@ -56,7 +57,7 @@ public class ventasController {
 	@DeleteMapping("/eliminar")
 	public ResponseEntity<?> borrarTodos() {
 
-		ventas oventas = new ventas();
+		Ventas oventas = new Ventas();
 		
 		ventasRepository.deleteAll();;
 		
@@ -65,23 +66,23 @@ public class ventasController {
 
 
 	@PutMapping("actualizar")
-	public ResponseEntity<?> actualizarventas(@RequestBody ventas ventas) {
+	public ResponseEntity<?> actualizarventas(@RequestBody Ventas ventas) {
 
-		Optional<ventas> ventasAnt = ventasRepository.findById(ventas.getcedula_cliente());
+		Optional<Ventas> ventasAnt = ventasRepository.findById(ventas.getCedula_cliente());
 		
 		if(ventasAnt.isEmpty())
 			return ResponseEntity.notFound().build();
 		
-		ventasAnt.get().setcodigo_producto(ventas.getcodigo_producto());
-		ventasAnt.get().setcedula_cliente(ventas.getcedula_cliente());
-		ventasAnt.get().setcodigo_venta(ventas.getcodigo_venta());
-		ventasAnt.get().setdetalles_venta(ventas.getdetalles_venta());
-		ventasAnt.get().setcantidad_productos(ventas.getcantidad_productos());
-		ventasAnt.get().setcantidad_productos(ventas.getcantidad_productos());
-		ventasAnt.get().setcodigo_producto(ventas.getcodigo_producto());
-		ventasAnt.get().setvalor_total(ventas.getvalor_total());
-		ventasAnt.get().setvalor_venta(ventas.getvalor_venta());
-		ventasAnt.get().setvaloriva(ventas.getvaloriva());
+		ventasAnt.get().setCedula_cliente(ventas.getCedula_cliente());
+		ventasAnt.get().setCodigo_venta(ventas.getCodigo_venta());
+
+		//verificar la creacion de la lista
+
+		ventasAnt.get().setDetalle_venta(ventas.getDetalle_venta());
+
+		ventasAnt.get().setIvaventa(ventas.getIvaventa());
+		ventasAnt.get().setTotal_venta(ventas.getTotal_venta());
+		ventasAnt.get().setValor_venta(ventas.getValor_venta());
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(ventasRepository.save(ventasAnt.get()));	
 	}
