@@ -1,7 +1,5 @@
 package com.mintic.lagenerica.model;
 
-import java.util.List;
-
 import org.springframework.data.annotation.Id;
 
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,9 +8,9 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Ventas {
 
 	@Id
-	private Long cedula_cliente;
 	private Long codigo_venta;
-	private List<DetalleVentas> detalle_venta;
+	private Long cedula_cliente;
+	private DetalleVentas[] detalle_venta;
 	private Double ivaventa;
 	private Double total_venta;
 	private Double valor_venta;
@@ -32,15 +30,15 @@ public class Ventas {
 	public void setCodigo_venta(Long codigo_venta) {
 		this.codigo_venta = codigo_venta;
 	}
-	
-	public List<DetalleVentas> getDetalle_venta() {
+		
+	public DetalleVentas[] getDetalle_venta() {
 		return detalle_venta;
 	}
-	
-	public void setDetalle_venta(List<DetalleVentas> detalle_venta) {
+
+	public void setDetalle_venta(DetalleVentas[] detalle_venta) {
 		this.detalle_venta = detalle_venta;
 	}
-	
+
 	public Double getIvaventa() {
 		return ivaventa;
 	}

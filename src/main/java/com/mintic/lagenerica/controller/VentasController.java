@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mintic.lagenerica.model.Consecutivo;
 import com.mintic.lagenerica.model.Ventas;
+import com.mintic.lagenerica.repository.ConsecutivoRepository;
 import com.mintic.lagenerica.repository.VentasRepository;
 
 @CrossOrigin(origins = {"http://localhost:8182", "http://localhost:3000"})
@@ -29,9 +31,31 @@ public class VentasController {
 
 	@Autowired
 	private VentasRepository ventasRepository;
-	
+
+	@Autowired
+	private ConsecutivoRepository consecutivoRepository;
+
 	@PostMapping("/guardar")
-	public ResponseEntity<?> crearventa(@RequestBody Ventas ventas){
+	public ResponseEntity<?> crearventa(@RequestBody Ventas ventas){		
+
+		Optional<Consecutivo> consecutivo ;
+
+		Consecutivo nuevoConsecutivo = new Consecutivo();
+		
+		consecutivo = consecutivoRepository.findById("ventas");
+				
+		nuevoConsecutivo.setNombre("ventas");
+		if (consecutivo.isEmpty()) {
+			nuevoConsecutivo.setValor(1L);
+		}
+		else {
+			nuevoConsecutivo.setValor(consecutivo.get().getValor() + 1);
+		}
+
+		consecutivoRepository.save(nuevoConsecutivo);
+
+		ventas.setCodigo_venta(nuevoConsecutivo.getValor());
+
 		return ResponseEntity.status(HttpStatus.CREATED).body(ventasRepository.save(ventas));
 	}
 	
@@ -39,7 +63,7 @@ public class VentasController {
 	public List<Ventas> listarventas() {
 		List<Ventas> listaVentas = StreamSupport.stream(ventasRepository.findAll().spliterator(), false).collect(Collectors.toList());
 		
-		return listarventas();
+		return listaVentas;
 	}
 
 	@GetMapping("/buscar/{id}")
@@ -65,7 +89,7 @@ public class VentasController {
 	}
 
 
-	@PutMapping("actualizar")
+	@PutMapping("/actualizar")
 	public ResponseEntity<?> actualizarventas(@RequestBody Ventas ventas) {
 
 		Optional<Ventas> ventasAnt = ventasRepository.findById(ventas.getCedula_cliente());
@@ -85,5 +109,36 @@ public class VentasController {
 		ventasAnt.get().setValor_venta(ventas.getValor_venta());
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(ventasRepository.save(ventasAnt.get()));	
+	}
+	
+	@GetMapping("/cliente/{id}")
+	public Double ventasPorCliente(@PathVariable(value = "id") Long idCliente) {
+		return ventasRepository.totalVentasPorCliente(idCliente);
+	}
+
+	@GetMapping("/ciudad")
+	public Double ventasPorCiudad() {
+		return ventasRepository.totalVentasPorCiudad();
+	}
+
+	@GetMapping("/consecutivo")
+	public ResponseEntity<?> obtenerConsecutivo() {
+		Optional<Consecutivo> consecutivo ;
+
+		Consecutivo nuevoConsecutivo = new Consecutivo();
+		
+		consecutivo = consecutivoRepository.findById("ventas");
+				
+		nuevoConsecutivo.setNombre("ventas");
+		if (consecutivo.isEmpty()) {
+			nuevoConsecutivo.setValor(1L);
+		}
+		else {
+			nuevoConsecutivo.setValor(consecutivo.get().getValor() + 1);
+		}
+
+		consecutivoRepository.save(nuevoConsecutivo);
+		
+		return ResponseEntity.ok(nuevoConsecutivo);
 	}
 }

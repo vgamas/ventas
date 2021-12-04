@@ -1,17 +1,17 @@
 package com.mintic.lagenerica.model;
 
 public class DetalleVentas {
-	private Long cantidad_producto;
+	private Float cantidad_producto;
 	private Long codigo_producto;
 	private Double valor_total;
 	private Double valor_venta;
 	private Double valoriva;
 	
-	public Long getCantidad_producto() {
+	public Float getCantidad_producto() {
 		return cantidad_producto;
 	}
 	
-	public void setCantidad_producto(Long cantidad_producto) {
+	public void setCantidad_producto(Float cantidad_producto) {
 		this.cantidad_producto = cantidad_producto;
 	}
 	
