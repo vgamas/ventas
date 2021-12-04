@@ -112,33 +112,8 @@ public class VentasController {
 	}
 	
 	@GetMapping("/cliente/{id}")
-	public Double ventasPorCliente(@PathVariable(value = "id") Long idCliente) {
-		return ventasRepository.totalVentasPorCliente(idCliente);
+	public ResponseEntity<?> ventasPorCliente(@PathVariable(value = "id") Long id) {
+		return ResponseEntity.ok(ventasRepository.ventasPorCliente(id));
 	}
 
-	@GetMapping("/ciudad")
-	public Double ventasPorCiudad() {
-		return ventasRepository.totalVentasPorCiudad();
-	}
-
-	@GetMapping("/consecutivo")
-	public ResponseEntity<?> obtenerConsecutivo() {
-		Optional<Consecutivo> consecutivo ;
-
-		Consecutivo nuevoConsecutivo = new Consecutivo();
-		
-		consecutivo = consecutivoRepository.findById("ventas");
-				
-		nuevoConsecutivo.setNombre("ventas");
-		if (consecutivo.isEmpty()) {
-			nuevoConsecutivo.setValor(1L);
-		}
-		else {
-			nuevoConsecutivo.setValor(consecutivo.get().getValor() + 1);
-		}
-
-		consecutivoRepository.save(nuevoConsecutivo);
-		
-		return ResponseEntity.ok(nuevoConsecutivo);
-	}
 }
